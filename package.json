@@ -1,25 +1,21 @@
 {
-  "name": "Laboratorio-de-software",
+  "name": "API",
   "version": "1.0.0",
-  "description": "",
+  "description": "VTEX API webservices server",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/daniidega/Laboratorio-de-software.git"
-  },
   "keywords": [],
-  "author": "",
+  "author": "Alexander Tamayo Pino - Ecommerce Developer / Rise",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/daniidega/Laboratorio-de-software/issues"
-  },
-  "homepage": "https://github.com/daniidega/Laboratorio-de-software#readme",
   "dependencies": {
     "express": "^4.16.2",
-    "nodemon": "^1.14.12"
+    "morgan": "^1.9.0",
+    "mysql": "^2.15.0",
+    "node-rest-client": "^3.1.0",
+    "nodemon": "^1.14.12",
+    "safe-json-stringify": "^1.0.4"
   }
 }

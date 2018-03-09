@@ -1,0 +1,150 @@
+// ---------------------------------------------------------------------------------------------------------
+// | API VTEX MASTER DATA COLLECTION
+// | 
+// |
+// ---------------------------------------------------------------------------------------------------------
+'use strict';
+
+var Client = require('node-rest-client').Client,
+    masterDataModel = require('../model/masterDataModel'),
+    vtexHeadersConfig = require('../model/vtexModel'),
+    masterDataDocument = require('../vtex_webservices/masterData/documents');
+
+var client = new Client(),
+    args = masterDataModel.encabezado,
+    apiKey = "vtexappkey-kungfudigital-TTNBVW",
+    apiToken = "PDAGPYMUPHSOEBSNASTAHTDEMKCUQYEQUIRXJQCVDDNWPNDPVQXTWQXWAVTEWSDQCBTVKVDJPXWEFGPZHMZAALUDLUWOWXZKZWUNTIFAMNDYUSQUFUXJTDPQGQKPYPNR",
+    account = "kungfudigital",
+    headers = vtexHeadersConfig.headers(apiKey,apiToken);
+
+// ----------------------------------------------------------------------------------------------------------------------------------
+// Exporta las url´s para ser utilizados al lanzar el servidor
+// ----------------------------------------------------------------------------------------------------------------------------------
+module.exports = function(app) {    
+
+    // ----------------------------------------------------------------------------------------------
+    // URL prueba servidor
+    // ----------------------------------------------------------------------------------------------
+    app.get('/saludo',(req,res)=>{
+        
+        //console.log('response: ' + res.json);
+        console.log('url de respuesta');
+        console.log("Rquest ip: " + req.ip);
+        console.log("Response ip: " + req.ip);
+
+        res.json();
+        res.end();
+    });
+
+    // ----------------------------------------------------------------------------------------------
+    // Documents API routes
+    // ----------------------------------------------------------------------------------------------
+
+    // Crea url para cargar el documento
+    app.post('/master_data/:data_entity_name/crear_documento', (req, res, next)=>{                                
+        console.log("entrnado al metodo post");
+        console.log(req.body);
+
+	var stringBody = req.body;
+	//console.log(stringBody);
+
+	var json = JSON.stringify(stringBody);
+	console.log(json);
+
+	var str = req.body.replace('\n\t', '');
+
+	console.log("\n" + "nuevo json: " + str + "\n");
+
+
+	var objectJson = JSON.parse(json);	console.log(Object.keys(req.body));
+//	console.log(Object.entries(req));
+//	
+//	var map = new Map(Object.entries(req));
+//	console.log('map: ', map);
+
+//	var vals = Object.keys(req).map(function(key){
+//		return req[key];
+//	});
+
+//	console.log(Object.keys(vals));
+//	console.log("valor: ", req.body.email);
+      
+        try {            
+            var data_entity = req.params.data_entity_name, // Parámetros de la url   
+            request = { data: req.body, headers }; // Request que se hace a vtex
+            
+            console.log("Body: " + JSON.stringify(req.body) + "\n");
+            console.log("request: " + JSON.stringify(request) + "\n");
+            console.log("Data entity: " + JSON.stringify(request) + "\n");
+            console.log("headers: " + req.ip);
+
+            // Consume el servicio de vtex y carga el documento en el masterdata de la tienda
+            /*client.post("https://"+account+".vtexcommercestable.com.br/api/dataentities/"+data_entity+"/documents", request, 
+                function (data,response)    {
+                    console.log("Request: " + data + "\n");                
+                    console.log("Código respuesta de vtex: " + res.statusCode);
+                    res.json(data);  
+                }).on('error',function(err){
+                    console.log("Hubo un error con la solicitud", err.request.options);
+                    console.log("Código respuesta de vtex: " + res.statusCode);
+                });*/
+
+            // Manejo de errores del cliente
+            client.on('error',function(err){
+                console.error('Ha ocurrido un error con el cliente ', err);
+            });
+
+        } catch (error) {
+            console.error("Error con el servicio de Rise: " + error);
+        }            
+    }).on('error',function(err){
+        console.log("Hubo un error con la solicitud del servidor de Rise: ", err.request.options);
+    });
+
+    // Obtiene el documento por el id y por el tipo de documento    
+    app.get('/master_data/documento/:data_entity_name/:idDocumento', (req,res,next) => {
+        var id = req.params.idDocumento,
+            dataEntity = req.params.data_entity_name;
+
+        console.log("headers" + args);
+        console.log(headers);
+
+        client.get("https://kungfudigital.vtexcommercestable.com.br/api/dataentities/"+dataEntity+"/documents/"+id, headers,
+            function(data, response){    
+                console.log(data);
+                res.json(data);
+            })
+    });
+
+    // --------------------------------------------------------------------------------------------------------------
+    app.get('/master_data/documentos/:data_entity_name/:idDocumento/:all_fields', (req,res,next) => {
+        var id = req.params.idDocumento,
+            dataEntity = req.params.data_entity_name,
+            all_fields = req.params.all_fields,
+            fields = "";
+
+        if(all_fields != null || all_fields != "" ){
+            fields = "?_fields=_all";
+        }
+
+        client.get("https://kungfudigital.vtexcommercestable.com.br/api/dataentities/"+dataEntity+"/documents/"+id+ fields, args,
+            function(data, response){    
+                console.log(data);
+                res.json(data);
+            })
+    });
+
+    // ----------------------------------------------------------------------------------------------
+    // Search API routes
+    // ----------------------------------------------------------------------------------------------
+
+    // List all documents by data entity
+    app.get('/master_data/documentos/:data_entity_name', (req,res,next) => {
+        var dataEntity = req.params.data_entity_name;
+        client.get("https://kungfudigital.vtexcommercestable.com.br/api/dataentities/"+ dataEntity +"/search", args,
+        function(data, response){
+            console.log(data);
+            res.json(data);
+        })
+    });
+};
