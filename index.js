@@ -2,9 +2,46 @@ var express = require('express'),
     routes = require('./api/routes/masterDataRoutes')
     morgan = require('morgan'),
     app = express(),
+    fileUpload = require('express-fileupload'),
+    Converter = require("csvtojson").Converter,
+    converter = new Converter({}),
     port = process.env.PORT || 80;
 
 app.use(morgan("dev"));
+
+app.use(fileUpload());
+// ruta para cargar archivos
+app.post('/upload', function(req, res) {
+    if (req.files){
+
+        // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+        var sampleFile = req.files.foo,
+            fileName = sampleFile.name;
+
+        sampleFile.mv("./uploads/"+fileName, function(err) {
+            if (err){
+                console.log(err);
+                return res.status(500).send(err);
+            } else {
+                res.send('File uploaded!');  
+            }                    
+        });
+
+    }            
+  });
+
+  converter.fromFile("./uploads/qafacol_CP2.csv",function(err,result){
+    // if an error has occured then handle it
+    if(err){
+        console.log("An Error Has Occured");
+        console.log(err);  
+    } 
+    // create a variable called json and store
+    // the result of the conversion
+    var json = JSON.stringify(result);
+    console.log(json);
+});
+
 
 /**
  * Este middleware crea un objeto json con la solicitud
@@ -28,7 +65,7 @@ app.use(function (req, res, next) {
 /**
  * Carga las rutas del servidor hacia el cliente
  */
-routes(app);
+//routes(app);
 
 /**
  * Muestra el puerto de escucha del servidor

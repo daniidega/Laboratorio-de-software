@@ -19,21 +19,9 @@ var Client = require('node-rest-client').Client,
 module.exports = function(app) {    
 
     /** 
-     * Variables de conexión a la base de datos y cliente REST
+     * cliente REST
     */
-    var client = new Client(),
-        connection = dbConnection();
-
-    /**
-     * Abre la conexión a la base de datos 
-     */
-    connection.connect(function(error){
-        if(!error){
-            console.log("Base de datos conectada");
-        }else{
-            console.log("Error al conectarse en la base de datos    ");
-        }
-    });
+    var client = new Client();
 
     /**
      * Url de prueba de consuumo del servicio
@@ -78,7 +66,7 @@ module.exports = function(app) {
 
             /**
              * Realiza la consulta a la base de datos para consultar las llaves
-             * de integración de la tienda de
+             * de integración de la tienda en vtex
              */
             model.consultarTabla(nombreCuentaVtex,(err,result)=>{
                 if (err) {
@@ -93,12 +81,13 @@ module.exports = function(app) {
                         console.log("request: " + JSON.stringify(request) + "\n");
                         console.log("Ip: " + req.ip);
                                             
-                        vtexWebServices.getDocument(cuenta,data_entity,request,res); // Carga el documento en vtex
+                        vtexWebServices.getDocument(cuenta,data_entity,request,res);
+
                     } catch (error) {
                         console.log("Error al llamar el servicio de vtex: " + error);
                     }
                 }
-            });     
+            });
         } catch (error) {
             console.error("Error con el servicio de Rise: " + error);            
             res.end("ERROR: " + error);
@@ -108,51 +97,56 @@ module.exports = function(app) {
     });
 
     /**
-     * 
+     * Ésta url actualiza un registro en el master data de vtex a partir
+     * del tipo de documento y el id del documento     
      */
-    app.get('/master_data/documento/:data_entity_name/:idDocumento', (req,res,next) => {
-        var id = req.params.idDocumento,
-            dataEntity = req.params.data_entity_name;
+    app.put('/master_data/actualizar_documento/:data_entity_name/:id_documento',(req,res,next)=>{
 
-        console.log("headers" + args);
-        console.log(headers);
+        console.log("------------------------------------------------");
+        console.log("ACTUALIZACION DE DOCUMENTOS EN EL MASTER DATA");
+        console.log("------------------------------------------------");
 
-        client.get("https://kungfudigital.vtexcommercestable.com.br/api/dataentities/"+dataEntity+"/documents/"+id, headers,
-            function(data, response){    
-                console.log(data);
-                res.json(data);
-            })
-    });
+        try {
+            var stringBody = req.body,
+                json = JSON.stringify(stringBody),
+                str = req.body.replace(/'/g, '"'),
+                nombreCuentaVtex = JSON.parse(str).accountName;
 
-    // --------------------------------------------------------------------------------------------------------------
-    app.get('/master_data/documentos/:data_entity_name/:idDocumento/:all_fields', (req,res,next) => {
-        var id = req.params.idDocumento,
-            dataEntity = req.params.data_entity_name,
-            all_fields = req.params.all_fields,
-            fields = "";
+            console.log("Request: " +"\n"+ str);
+            console.log("Nombre cuenta tienda: " + nombreCuentaVtex);
 
-        if(all_fields != null || all_fields != "" ){
-            fields = "?_fields=_all";
+            /**
+             * Realiza la consulta a la base de datos para consultar las llaves
+             * de integración de la tienda en vtex
+             */
+            model.consultarTabla(nombreCuentaVtex,(err,result)=>{
+                if (err) {
+                    console.log("ERROR", err);
+                } else {
+                    try {
+                        var headers = vtexHeadersConfig.headers(result),
+                        cuenta = result[0].nombre_cuenta, // Cuenta de la tienda de vtex en la DB
+                        data_entity = req.params.data_entity_name, // Tipo de documento que se va actualizar
+                        id_data_entity = req.params.id_documento, // Id del documento para actulizar
+                        request = { data: req.body, headers }; // Vtex Request
+
+                        console.log("request: " + JSON.stringify(request) + "\n");
+                        console.log("Ip: " + req.ip);  
+
+                        vtexWebServices.updateDocument(cuenta,data_entity,id_data_entity,request,res);
+
+                    } catch (error) {
+                        console.log("Error al llamar el servicio de vtex: " + error);
+                    }
+                }
+            });     
+        } catch (error) {
+            console.error("Error con el servicio de Rise: " + error);            
+            res.end("ERROR: " + error);
         }
 
-        client.get("https://kungfudigital.vtexcommercestable.com.br/api/dataentities/"+dataEntity+"/documents/"+id+ fields, args,
-            function(data, response){    
-                console.log(data);
-                res.json(data);
-            })
-    });
 
-    // ----------------------------------------------------------------------------------------------
-    // Search API routes
-    // ----------------------------------------------------------------------------------------------
-
-    // List all documents by data entity
-    app.get('/master_data/documentos/:data_entity_name', (req,res,next) => {
-        var dataEntity = req.params.data_entity_name;
-        client.get("https://kungfudigital.vtexcommercestable.com.br/api/dataentities/"+ dataEntity +"/search", args,
-        function(data, response){
-            console.log(data);
-            res.json(data);
-        })
+    }).on('error',function(err){
+        console.log("Hubo un error con la solicitud del servidor de Rise: ", err.request.options);
     });
 };
