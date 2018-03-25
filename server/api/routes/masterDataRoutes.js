@@ -39,7 +39,7 @@ module.exports = function(app) {
      * Url de prueba de consuumo del servicio
      */
     app.get('/saludo',function(req,res) {
-        model.consultarTabla("patprimo",(err,data)=>{
+        model.consultarTabla("kungfudigital",(err,data)=>{
             if (err) {
                 console.log("ERROR", err);
             } else {           
