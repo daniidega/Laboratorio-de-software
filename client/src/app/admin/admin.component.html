@@ -15,13 +15,8 @@
 
 
 
-<form method="POST">
-
-
-</form>
-
 <!-- File input for the file-upload plugin, with special ng2-file-upload directive called ng2FileSelect -->
-<input type="file" name="file" ng2FileSelect [uploader]="uploader" />
+<input type="file" name="uploadFile" ng2FileSelect [uploader]="uploader" />
 <!-- button to trigger the file upload when submitted -->
 <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
       Upload with ng-2 file uploader
