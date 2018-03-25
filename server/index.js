@@ -1,30 +1,30 @@
-/*
-var express = require('express'),
-  routes = require('./api/routes/masterDataRoutes')
-morgan = require('morgan'),
-  app = express(),
-  fileUpload = require('express-fileupload'),
-  Converter = require("csvtojson").Converter,
-  converter = new Converter({}),
-  port = process.env.PORT || 3000;*/
-
-
 const express = require('express');
 const app = express();
+const Converter = require("csvtojson").Converter;
+const converter = new Converter({});
 const morgan = require('morgan');
 const masterDataRoutes = require('./api/routes/masterDataRoutes');
+var fileUpload = require('express-fileupload');
 const riseRoutes = require('./api/routes/riseRoutes');
+//const utils = require('./api/utils/utils');
 const port = process.env.PORT || 3000;
 
 app.use(morgan("dev"));
-
 app.use(fileUpload());
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', "*");
+  res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
 // ruta para cargar archivos
 app.post('/upload', function (req, res) {
   if (req.files) {
 
     // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-    var sampleFile = req.files.foo,
+    var sampleFile = req.files.uploadFile,
       fileName = sampleFile.name;
 
     sampleFile.mv("./uploads/" + fileName, function (err) {
@@ -39,7 +39,7 @@ app.post('/upload', function (req, res) {
   }
 });
 
-converter.fromFile("./uploads/qafacol_CP2.csv", function (err, result) {
+/*converter.fromFile("./uploads/qafacol_CP2.csv", function (err, result) {
   // if an error has occured then handle it
   if (err) {
     console.log("An Error Has Occured");
@@ -49,7 +49,7 @@ converter.fromFile("./uploads/qafacol_CP2.csv", function (err, result) {
   // the result of the conversion
   var json = JSON.stringify(result);
   console.log(json);
-});
+});*/
 
 
 /**
@@ -71,9 +71,8 @@ app.use(function (req, res, next) {
   console.log("Data " + data);
 });
 
-//routes(app);
+//riseRoutes(app)
 masterDataRoutes(app);
-app.use(riseRoutes);
 
 app.listen(port, function () {
   console.log('Rise server listen on port: ' + port);
