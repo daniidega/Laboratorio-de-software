@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 //import the file uploader plugin
 import {  FileUploader } from 'ng2-file-upload/ng2-file-upload';
 
-const URL = 'http://localhost/upload';
+const URL = 'http://localhost:3000/upload';
 
 @Component({
   selector: 'app-admin',
