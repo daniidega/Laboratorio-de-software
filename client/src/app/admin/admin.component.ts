@@ -14,7 +14,7 @@ export class AdminComponent implements OnInit {
 
   //declare a property called fileuploader and assign it to an instance of a new fileUploader.
   //pass in the Url to be uploaded to, and pass the itemAlais, which would be the name of the //file input when sending the post request.
-  public uploader:FileUploader = new FileUploader({url: URL, itemAlias: 'photo'});
+  public uploader:FileUploader = new FileUploader({url: URL, itemAlias: 'upload'});
 
   public title = 'admin works!!!!';
 

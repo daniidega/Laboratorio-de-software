@@ -4,13 +4,13 @@ const Converter = require("csvtojson").Converter;
 const converter = new Converter({});
 const morgan = require('morgan');
 const masterDataRoutes = require('./api/routes/masterDataRoutes');
-var fileUpload = require('express-fileupload');
+const fileUpload = require('express-fileupload');
 const riseRoutes = require('./api/routes/riseRoutes');
 //const utils = require('./api/utils/utils');
 const port = process.env.PORT || 3000;
 
 app.use(morgan("dev"));
-app.use(fileUpload());
+/*app.use(fileUpload());
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', "*");
@@ -20,11 +20,14 @@ app.use((req, res, next) => {
 });
 
 // ruta para cargar archivos
+
 app.post('/upload', function (req, res) {
+  console.log(req.body);
+  console.log(req.files);
   if (req.files) {
 
     // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-    var sampleFile = req.files.uploadFile,
+    var sampleFile = req.files.upload,
       fileName = sampleFile.name;
 
     sampleFile.mv("./uploads/" + fileName, function (err) {
@@ -35,9 +38,8 @@ app.post('/upload', function (req, res) {
         res.send('File uploaded!');
       }
     });
-
   }
-});
+});*/
 
 /*converter.fromFile("./uploads/qafacol_CP2.csv", function (err, result) {
   // if an error has occured then handle it
@@ -66,12 +68,11 @@ app.use(function (req, res, next) {
     req.body = data;
     next();
   });
-
   console.log(req.method);
   console.log("Data " + data);
 });
 
-//riseRoutes(app)
+app.use(riseRoutes);
 masterDataRoutes(app);
 
 app.listen(port, function () {
