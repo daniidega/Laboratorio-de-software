@@ -1,0 +1,28 @@
+
+<!--
+<form method="GET" action="http://localhost/saludo">
+  <div class="form-group">
+    <label for="exampleFormControlFile1">Cargar archivo csv</label>
+    <input type="file" class="form-control-file" id="exampleFormControlFile1">
+  </div>
+  <input type="submit" placeholder="saludar">
+</form> -->
+
+<h1>
+  <!-- here we echo the title from the component -->
+    {{title}}
+</h1>
+
+
+
+<form method="POST">
+
+
+</form>
+
+<!-- File input for the file-upload plugin, with special ng2-file-upload directive called ng2FileSelect -->
+<input type="file" name="file" ng2FileSelect [uploader]="uploader" />
+<!-- button to trigger the file upload when submitted -->
+<button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
+      Upload with ng-2 file uploader
+</button> 
