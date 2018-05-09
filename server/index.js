@@ -20,6 +20,7 @@ app.use((req, res, next) => {
 });
 
 // ruta para cargar archivos
+// Se debe configurar esta ruta
 app.post('/upload', function (req, res) {
   console.log(req.body);
   console.log(req.files);
