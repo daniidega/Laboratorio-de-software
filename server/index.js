@@ -10,7 +10,7 @@ const riseRoutes = require('./api/routes/riseRoutes');
 const port = process.env.PORT || 3000;
 
 app.use(morgan("dev"));
-/*app.use(fileUpload());
+app.use(fileUpload());
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', "*");
@@ -20,7 +20,6 @@ app.use((req, res, next) => {
 });
 
 // ruta para cargar archivos
-
 app.post('/upload', function (req, res) {
   console.log(req.body);
   console.log(req.files);
@@ -39,7 +38,7 @@ app.post('/upload', function (req, res) {
       }
     });
   }
-});*/
+});
 
 /*converter.fromFile("./uploads/qafacol_CP2.csv", function (err, result) {
   // if an error has occured then handle it
@@ -51,8 +50,7 @@ app.post('/upload', function (req, res) {
   // the result of the conversion
   var json = JSON.stringify(result);
   console.log(json);
-});*/
-
+});
 
 /**
  * Este middleware crea un objeto json con la solicitud
@@ -72,8 +70,8 @@ app.use(function (req, res, next) {
   console.log("Data " + data);
 });
 
-app.use(riseRoutes);
-masterDataRoutes(app);
+//app.use(riseRoutes);
+//masterDataRoutes(app);
 
 app.listen(port, function () {
   console.log('Rise server listen on port: ' + port);
