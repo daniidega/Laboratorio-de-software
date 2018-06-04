@@ -40,6 +40,12 @@ app.post('/upload', function (req, res) {
   }
 });
 
+// ruta descarga
+app.get('/download', function (req, res) {
+  res.download(__dirname + '/uploads/qafacol_CP.csv','qafacol_CP.csv');
+}),
+
+
 
 /*converter.fromFile("./uploads/qafacol_CP2.csv", function (err, result) {
   // if an error has occured then handle it
