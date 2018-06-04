@@ -4,32 +4,39 @@ import { BrowserModule  } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import { LoginComponent } from './login/login.component';
+import { CargarArchivoComponent } from './cargar-archivo/cargar-archivo.component';
+import { ReporteComponent } from './reporte/reporte.component';
 
 const routes: Routes =[
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'login',
     pathMatch: 'full',
-  }, {
-    path: '',
+  },{
+    path: 'admin',
     component: AdminLayoutComponent,
     children: [
         {
       path: '',
       loadChildren: './layouts/admin-layout/admin-layout.module#AdminLayoutModule'
-  }]}
-    // { path: 'dashboard',      component: DashboardComponent },
-    // { path: 'user-profile',   component: UserProfileComponent },
-    // { path: 'table-list',     component: TableListComponent },
-    // { path: 'typography',     component: TypographyComponent },
-    // { path: 'icons',          component: IconsComponent },
-    // { path: 'maps',           component: MapsComponent },
-    // { path: 'notifications',  component: NotificationsComponent },
-    // { path: 'upgrade',        component: UpgradeComponent },
-    // { path: '',               redirectTo: 'dashboard', pathMatch: 'full' }
+  }]},
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+  {
+    path: 'admin/upload',
+    component: CargarArchivoComponent
+  },
+  {
+    path: 'admin/download',
+    component: ReporteComponent
+  }
+
 ];
 
-@NgModule({
+@NgModule({ 
   imports: [
     CommonModule,
     BrowserModule,

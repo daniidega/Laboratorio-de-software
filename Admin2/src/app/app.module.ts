@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
+import { FileSelectDirective } from 'ng2-file-upload';
 
 import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
@@ -23,6 +24,9 @@ import {
 } from '@agm/core';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { LoginComponent } from './login/login.component';
+import { CargarArchivoComponent } from './cargar-archivo/cargar-archivo.component';
+import { ReporteComponent } from './reporte/reporte.component';
+
 
 @NgModule({
   imports: [
@@ -39,7 +43,10 @@ import { LoginComponent } from './login/login.component';
   declarations: [
     AppComponent,
     AdminLayoutComponent,
+    CargarArchivoComponent,
+    FileSelectDirective,
     LoginComponent,
+    ReporteComponent,
 
   ],
   providers: [],
