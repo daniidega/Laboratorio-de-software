@@ -1,12 +1,3 @@
-// ---------------------------------------------------------------------------------------------------------
-// | Crea los modelos de datos para ser enviados hacia los servicios web de vtex desde el cliente
-// | 
-// |
-// |
-// |
-// |
-// ---------------------------------------------------------------------------------------------------------
-
 exports.encabezado = {    
     headers: { 
         "Content-Type": "application/json",
